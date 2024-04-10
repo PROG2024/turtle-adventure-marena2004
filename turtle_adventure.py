@@ -370,38 +370,34 @@ class FencingEnemy(Enemy):
                            self.y + self.size / 2)
 
     def delete(self) -> None:
-        pass
+        self.canvas.delete(self.__id)
 
 
-class CustomEnemy(Enemy):
+class DiagonalEnemy(Enemy):
     """
-    Custom enemy (you need to define the behavior).
+    Enemy that moves diagonally across the screen.
     """
 
     def __init__(self,
                  game: "TurtleAdventureGame",
                  size: int,
-                 color: str):
+                 color: str,
+                 dx: float,
+                 dy: float,
+                 start_x: int,
+                 start_y: int):
         super().__init__(game, size, color)
-        self.__id = None
+        self.__dx = dx
+        self.__dy = dy
+        self.x = start_x
+        self.y = start_y
 
     def create(self) -> None:
         self.__id = self.canvas.create_oval(0, 0, 0, 0, fill=self.color)
 
     def update(self) -> None:
-        target_x = self.game.player.x
-        target_y = self.game.player.y
-
-        dx = target_x - self.x
-        dy = target_y - self.y
-        magnitude = math.sqrt(dx ** 2 + dy ** 2)
-
-        if magnitude != 0:
-            speed = 2
-            dx /= magnitude
-            dy /= magnitude
-            self.x += dx * speed
-            self.y += dy * speed
+        self.x += self.__dx
+        self.y += self.__dy
 
         if self.hits_player():
             self.game.game_over_lose()
@@ -414,7 +410,7 @@ class CustomEnemy(Enemy):
                            self.y + self.size / 2)
 
     def delete(self) -> None:
-        pass
+        self.canvas.delete(self.__id)
 
 
 class EnemyGenerator:
@@ -448,18 +444,10 @@ class EnemyGenerator:
         """
         Create a new enemy, possibly based on the game level
         """
-        num_custom_enemies = 4
         num_chasing_enemies = 5
         num_fencing_enemies = 1
         num_random_enemy = 5
-
-        for n in range(num_custom_enemies):
-            new_enemy = CustomEnemy(self.__game, 22, "orange")
-            random_x = random.randint(50, self.game.screen_width - 50)
-            random_y = random.randint(50, self.game.screen_height - 50)
-            new_enemy.x = random_x
-            new_enemy.y = random_y
-            self.game.add_enemy(new_enemy)
+        num_diagonal_enemies = 3
 
         for n in range(num_chasing_enemies):
             new_enemy = ChasingEnemy(self.__game, 25, "violet")
@@ -478,7 +466,15 @@ class EnemyGenerator:
             self.game.add_enemy(new_enemy)
 
         for n in range(num_fencing_enemies):
-            new_enemy = FencingEnemy(self.__game, 16, "green")
+            new_enemy = FencingEnemy(self.__game, 16, "yellow")
+            random_x = random.randint(50, self.game.screen_width - 50)
+            random_y = random.randint(50, self.game.screen_height - 50)
+            new_enemy.x = random_x
+            new_enemy.y = random_y
+            self.game.add_enemy(new_enemy)
+
+        for n in range(num_diagonal_enemies):
+            new_enemy = DiagonalEnemy(self.__game, 20, "orange", 1, 1, 50, 50)
             random_x = random.randint(50, self.game.screen_width - 50)
             random_y = random.randint(50, self.game.screen_height - 50)
             new_enemy.x = random_x
