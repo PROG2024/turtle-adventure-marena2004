@@ -260,16 +260,20 @@ class DemoEnemy(Enemy):
         super().__init__(game, size, color)
 
     def create(self) -> None:
-        pass
+        self.__id = self.canvas.create_oval(0, 0, 0, 0, outline=self.color, width=2)
 
     def update(self) -> None:
         pass
 
     def render(self) -> None:
-        pass
+        self.canvas.coords(self.__id,
+                           self.x - self.size / 2,
+                           self.y - self.size / 2,
+                           self.x + self.size / 2,
+                           self.y + self.size / 2)
 
     def delete(self) -> None:
-        pass
+        self.canvas.delete(self.__id)
 
 
 # TODO
