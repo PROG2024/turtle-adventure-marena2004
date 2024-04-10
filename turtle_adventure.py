@@ -4,7 +4,8 @@ adventure game.
 """
 from turtle import RawTurtle
 from gamelib import Game, GameElement
-
+import random
+import math
 
 class TurtleGameElement(GameElement):
     """
@@ -242,12 +243,6 @@ class Enemy(TurtleGameElement):
         )
 
 
-# TODO
-# * Define your enemy classes
-# * Implement all methods required by the GameElement abstract class
-# * Define enemy's update logic in the update() method
-# * Check whether the player hits this enemy, then call the
-#   self.game.game_over_lose() method in the TurtleAdventureGame class.
 class DemoEnemy(Enemy):
     """
     Demo enemy
@@ -263,7 +258,10 @@ class DemoEnemy(Enemy):
         self.__id = self.canvas.create_oval(0, 0, 0, 0, outline=self.color, width=2)
 
     def update(self) -> None:
-        pass
+        self.x += 5
+        self.y += 5
+        if self.hits_player():
+            self.game.game_over_lose()
 
     def render(self) -> None:
         self.canvas.coords(self.__id,
@@ -294,8 +292,7 @@ class EnemyGenerator:
         self.__game: TurtleAdventureGame = game
         self.__level: int = level
 
-        # example
-        self.__game.after(100, self.create_enemy)
+        self.create_enemy()
 
     @property
     def game(self) -> "TurtleAdventureGame":
