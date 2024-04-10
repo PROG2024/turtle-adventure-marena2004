@@ -243,14 +243,6 @@ class Enemy(TurtleGameElement):
                 (self.y - self.size / 2 < self.game.player.y < self.y + self.size / 2)
         )
 
-
-# TODO
-# * Define your enemy classes
-# * Implement all methods required by the GameElement abstract class
-# * Define enemy's update logic in the update() method
-# * Check whether the player hits this enemy, then call the
-#   self.game.game_over_lose() method in the TurtleAdventureGame class.
-
 class DemoEnemy(Enemy):
     """
     Demo enemy
@@ -415,14 +407,6 @@ class CustomEnemy(Enemy):
     def delete(self) -> None:
         self.canvas.delete(self.__id)
 
-
-# TODO
-# Complete the EnemyGenerator class by inserting code to generate enemies
-# based on the given game level; call TurtleAdventureGame's add_enemy() method
-# to add enemies to the game at certain points in time.
-#
-# Hint: the 'game' parameter is a tkinter's frame, so it's after()
-# method can be used to schedule some future events.
 
 class EnemyGenerator:
     """
